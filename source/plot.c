@@ -76,7 +76,7 @@ void plot2() {
 	show_message(Q_HAWK, "\"Listen, I don't know who you are and I don't care. I'm only going to warn you once. Turn around and leave now or you will regret it.\"");
 	show_message(D_THUNDER, "\"Apparently rudeness and overconfidence go hand in hand. Very well, but it is you who will soon regret your rash choice of actions!\"");
 	force_random_encounter(21);
-	after_boss();
+	if (after_boss()) return;
 	show_message(D_THUNDER, "\"They are too powerful. I can't go on. Forgive me, Patriarch.\"");
 	show_message(Q_HAWK, "\"I told you not to mess with us.\"");
 
@@ -92,7 +92,7 @@ void plot3() {
 	
 	hide_sp();
 	force_random_encounter(22);
-	after_boss();
+	if (after_boss()) return;
 	show_message(D_SKY, "\"How is this possible?\"");
 	show_message(Q_HAWK, "\"All we wanted you to do was leave us alone... what was your name again?\"");
 	show_message(D_SKY, "\"You... you... augh!\"");
@@ -108,7 +108,7 @@ void plot4() {
 	show_message(Q_HAWK, "\"He's in no mood to negotiate. Star, get ready!\"");
 	
 	force_random_encounter(23);
-	after_boss();
+	if (after_boss()) return;
 	show_message(D_PATRIARCH, "\"It's not over. You will not get away with this.\"");
 	gs.plot[PLOT_ELVL] = 16;
 }
@@ -122,7 +122,7 @@ void plot5() {
 	show_message(Q_STAR, "\"We aren't going to let you do that!\"");
 
 	force_random_encounter(24);
-	after_boss();
+	if (after_boss()) return;
 	show_message(D_RAVEN, "\"Thunder... Sky... I'm sorry...\"");
 	gs.plot[PLOT_ELVL] = 20;
 }
@@ -136,7 +136,7 @@ void plot6() {
 	show_message(Q_STAR, "\"Hawk, watch out!\"");
 
 	force_random_encounter(25);
-	after_boss();
+	if (after_boss()) return;
 	show_message(R_EMPEROR, "\"What... how?\"");
 	show_message(Q_HAWK, "\"We learned how to fight here. Our ancestors stretching back to time memorial trained on these grounds.\"");
 	show_message(Q_STAR, "\"As far as we are concerned, this place is ours. Who are you, and why did you come here?\"");
@@ -159,6 +159,7 @@ int plot_handle()
 	PLOT_HANDLE(5,   12, 2, 0, plot6);
 	PLOT_HANDLE(5,   12, 3, 0, plot6);
 	BATTLE_CANNOT_RUN = 0;
+	if (BATTLE_OUTCOME == -1) return 1;
 	if (gs.plot[PLOT_BASE] == 6) {
 		REG_BLDCNT = BLD_TOP(BLD_ALL | BLD_BACKDROP) | BLD_BLACK;
 		for (int i = 0; i <= 16; i++) {

@@ -389,16 +389,17 @@ int interactEnv()
   return 0;
 }
 
-void after_boss()
+int after_boss()
 {
   if (BATTLE_OUTCOME == -1) {
     game_over();
-    return;
+    return 1;
   }
   if (BATTLE_OUTCOME == 1) {
     victory();
   }
   CURRENT_MOD = GAMEPLAY_MUS;
+  return 0;
 }
 
 void gameplay() {

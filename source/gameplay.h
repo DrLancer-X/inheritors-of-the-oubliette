@@ -10,7 +10,7 @@ int getDirZ(uint8_t dir);
 uint8_t getTexDirFrom(uint16_t x, uint16_t y, uint16_t z, uint8_t dir);
 int turnLeft();
 int turnRight();
-void after_boss();
+int after_boss();
 
 struct lvldata {
   struct lvl_tile *map;
