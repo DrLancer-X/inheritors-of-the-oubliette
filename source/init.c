@@ -68,9 +68,31 @@ void initIrq()
   irq_enable(II_VBLANK);
 }
 
+static void *maxmod_buffer = NULL;
+static uint8_t maxmod_mix_memory[MM_MIXLEN_31KHZ];
+
 void initMaxmod()
 {
-  mmInitDefault( (mm_addr)soundbank_bin, 8 );
+  if (maxmod_buffer != NULL)
+    free(maxmod_buffer);
+
+  uint8_t channels = 8;
+  uint16_t mix_len = MM_MIXLEN_31KHZ;
+  mm_gba_system sys;
+
+  maxmod_buffer = malloc(mix_len + (channels * (MM_SIZEOF_MODCH + MM_SIZEOF_ACTCH + MM_SIZEOF_MIXCH)));
+
+  sys.mixing_mode = MM_MIX_31KHZ;
+  sys.mod_channel_count = channels;
+  sys.mix_channel_count = channels;
+  sys.wave_memory = (mm_addr) (maxmod_buffer);
+  sys.module_channels = (mm_addr) (maxmod_buffer + mix_len);
+  sys.active_channels = (mm_addr) (maxmod_buffer + mix_len + (channels * (MM_SIZEOF_MODCH)));
+  sys.mixing_channels = (mm_addr) (maxmod_buffer + mix_len + (channels * (MM_SIZEOF_MODCH + MM_SIZEOF_ACTCH)));
+  sys.mixing_memory = maxmod_mix_memory;
+  sys.soundbank = (mm_addr)soundbank_bin;
+
+  mmInit(&sys);
   mmSetVBlankHandler(irqvector);
   mmSetModuleVolume(256);
 }

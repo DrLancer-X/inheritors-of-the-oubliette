@@ -79,8 +79,11 @@ CPPFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.cpp)))
 SFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.s)))
 BINFILES	:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.*)))
 
+export ITFILES	:=	$(foreach dir,$(notdir $(wildcard $(MUSIC)/*.it)),$(CURDIR)/$(MUSIC)/$(dir))
+export WAVFILES	:=	$(foreach dir,$(notdir $(wildcard $(MUSIC)/*.wav)),$(CURDIR)/$(MUSIC)/$(dir))
+
 ifneq ($(strip $(MUSIC)),)
-	export AUDIOFILES	:=	$(foreach dir,$(notdir $(wildcard $(MUSIC)/*.*)),$(CURDIR)/$(MUSIC)/$(dir))
+	export AUDIOFILES	:=	$(foreach dir,$(notdir $(wildcard $(MUSIC)/*.*)),$(CURDIR)/$(BUILD)/$(dir))
 	BINFILES += soundbank.bin
 endif
 
@@ -151,9 +154,13 @@ $(OFILES_SOURCES) : $(HFILES)
 #---------------------------------------------------------------------------------
 # rule to build soundbank from music files
 #---------------------------------------------------------------------------------
-soundbank.bin soundbank.h : $(AUDIOFILES)
+soundbank.bin soundbank.h : $(ITFILES)
 #---------------------------------------------------------------------------------
-	@mmutil $^ -osoundbank.bin -hsoundbank.h
+	@cp $(ITFILES) .
+	for i in $(WAVFILES) ; do \
+		sox $$i -b 8 `basename $$i` gain -1 channels 1 rate -I 31536 dither -s ; \
+	done
+	@mmutil $(AUDIOFILES) -v -osoundbank.bin -hsoundbank.h
 
 #---------------------------------------------------------------------------------
 # This rule links in binary data with the .bin extension
