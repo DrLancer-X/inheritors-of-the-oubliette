@@ -17,11 +17,11 @@ const char * const STATUSES[] = {
 	"Inviso",
 };
 const char * const ACC_DESC[] = {
-	"Accessory 1 description",
-	"Accessory 2 description",
-	"Accessory 3 description",
-	"Accessory 4 description",
-	"Accessory 5 description",
+	"Prevents poison",
+	"Regenerates Qi during battle",
+	"Gives an extra turn in battle",
+	"Prevents all negative status conditions",
+	"Keeps wearer's Qi completely filled during battle",
 };
 const char * const PLR_NAME[] = {
 	"MC name",

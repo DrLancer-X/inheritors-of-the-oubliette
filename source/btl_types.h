@@ -21,11 +21,11 @@
 #define SP_REVIVE 6
 #define SP_HEAL 7
 
-#define ACC_POISONRING 1
-#define ACC_MPREGEN 2
-#define ACC_SPEEDBOOTS 3
-#define ACC_AMULET 4
-#define ACC_MPMAX 5
+#define ACC_POISONRING 0
+#define ACC_MPREGEN 1
+#define ACC_SPEEDBOOTS 2
+#define ACC_AMULET 3
+#define ACC_MPMAX 4
 
 struct actor {
   uint8_t active; // 0 - no. 1 - yes
