@@ -39,27 +39,45 @@ int check_magic()
 
 void write_magic()
 {
+	// First check magic
+	if (!check_magic()) {
+		// The check failed. This means that things are in an indeterminate state
+		// and we cannot make assumptions about the contents of SRAM
+		
+		// Erase all save slots (just erasing the 'filled' byte is enough)
+		for (int i = 0; i < 5; i++) {
+			size_t save_pos = i * save_size + sizeof(struct header_info);
+			sram[save_pos] = 0;
+		}
+		// Now write the magic
+		sram[0] = 'I';
+		sram[1] = 'o';
+		sram[2] = 't';
+		sram[3] = 'O';
+		// Write size
+		uint16_t size_check = save_size;
+		write_bytes(&size_check, &sram[4], sizeof(size_check));
+	}
+	
+	// Before we update the config info, temp disable the magic.
+	// This is in case we lose power mid-write
+	
+	sram[0] = 'W';
 	// Write config
 	struct header_info header;
 	memset(&header, 0, sizeof(header));
 	header.colspace = COLSPACE;
 	header.curmem = CMEM_ON;
 	header.lrstrafe = (KB_STRAFELEFT == KEY_L) ? 1 : 0;
-	write_bytes(&header, &sram[0], sizeof(header));
+	// Don't write over magic
+	write_bytes(((const void *)&header) + 6, &sram[6], sizeof(header) - 6);
 	
-	// Write magic
+	// Fix the magic again
 	sram[0] = 'I';
-	sram[1] = 'o';
-	sram[2] = 't';
-	sram[3] = 'O';
-	// Write size
-	uint16_t size_check = save_size;
-	write_bytes(&size_check, &sram[4], sizeof(size_check));
 }
 
 struct saveinfo *retrieve_saves()
 {
-	
 	// We assume we have 32kb of sram
 	
 	struct saveinfo *saves = malloc(sizeof(struct saveinfo) * 5);
