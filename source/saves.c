@@ -39,6 +39,14 @@ int check_magic()
 
 void write_magic()
 {
+	// Write config
+	struct header_info header;
+	memset(&header, 0, sizeof(header));
+	header.colspace = COLSPACE;
+	header.curmem = CMEM_ON;
+	header.lrstrafe = (KB_STRAFELEFT == KEY_L) ? 1 : 0;
+	write_bytes(&header, &sram[0], sizeof(header));
+	
 	// Write magic
 	sram[0] = 'I';
 	sram[1] = 'o';
@@ -172,11 +180,5 @@ void load_config()
 }
 void save_config()
 {
-	struct header_info header;
-	memset(&header, 0, sizeof(header));
-	header.colspace = COLSPACE;
-	header.curmem = CMEM_ON;
-	header.lrstrafe = (KB_STRAFELEFT == KEY_L) ? 1 : 0;
-	write_bytes(&header, &sram[0], sizeof(header));
 	write_magic();
 }

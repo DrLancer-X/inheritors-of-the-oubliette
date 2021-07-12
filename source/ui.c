@@ -481,7 +481,7 @@ void show_save(struct saveinfo *saves, uint8_t ico, uint8_t cur)
 	fast_copy(OBJ_CHR(24, 8), btl_menuicons_bin + (ico << 8) + 0, 64);
 	fast_copy(OBJ_CHR(24, 9), btl_menuicons_bin + (ico << 8) + 64, 64);
 	
-	if (saves[cur].filled) {
+	if (saves[cur].filled == 0x01) {
 		draw_text(28, 68 + 4, saves[cur].txt1);
 		draw_text(28, 68 + 16 + 2, saves[cur].txt2);
 		draw_text(28, 68 + 32, saves[cur].txt3);
@@ -835,7 +835,7 @@ uint8_t status_save() {
 			saves = retrieve_saves();
 		
 		for (int i = 0; i < 5; i++) {
-			icons[i] = saves[i].filled ? 15 + i : 10 + i;
+			icons[i] = saves[i].filled == 0x01 ? 15 + i : 10 + i;
 		}
 		
 		show_save(saves, icons[cur], cur);
@@ -1072,7 +1072,7 @@ int status_load()
 		//hide_display();
 		fast_copy(OBJ_CHR(0, 0), btl_uimap_bin + (5 << 13), 8192);
 
-		if (saves[cur].filled) {
+		if (saves[cur].filled == 0x01) {
 			draw_text(28, 4 + 4, saves[cur].txt1);
 			draw_text(28, 4 + 16 + 2, saves[cur].txt2);
 			draw_text(28, 4 + 32, saves[cur].txt3);
@@ -1086,7 +1086,7 @@ int status_load()
 			int x, y, dx, dy;
 			x = i * 4;
 			y = 8;
-			if (saves[i].filled) y += 4;
+			if (saves[i].filled == 0x01) y += 4;
 			dx = 40 * i + 24;
 			dy = 96;
 			OBJSET(31-i, x, y, dx, dy, cur == i ? 3 : 1, ATTR0_SQUARE, ATTR1_SIZE_32x32, 0);
@@ -1114,7 +1114,7 @@ int status_load()
 				break;
 			}
 			else if (INKEY_PRESSED & KEY_A) {
-				if (saves[cur].filled) {
+				if (saves[cur].filled == 0x01) {
 					mmEffect(SFX_DECIDE);
 					free(saves);
 					load_save(cur);
