@@ -1331,6 +1331,9 @@ void random_encounter_dir(uint8_t *elist, int dir)
     turnLeft();
   } else if (dir == 1) {
     turnRight();
+  } else if (dir == 2) {
+    turnRight();
+    turnRight();
   }
   check_space(gs.d, 1);
   
@@ -1466,14 +1469,19 @@ void force_random_encounter(int idx)
     return;
   }
   
-  int left_c = check_space((gs.d - 1) & 3, 0);
+  check_space((gs.d - 1) & 3, 0);
   if (spaces[1] == 1) {
     random_encounter_dir(elist, -1);
     return;
   }
-  int right_c = check_space((gs.d + 1) & 3, 0);
+  check_space((gs.d + 1) & 3, 0);
   if (spaces[1] == 1) {
     random_encounter_dir(elist, 1);
+    return;
+  }
+  check_space((gs.d + 2) & 3, 0);
+  if (spaces[1] == 1) {
+    random_encounter_dir(elist, 2);
     return;
   }
 }
