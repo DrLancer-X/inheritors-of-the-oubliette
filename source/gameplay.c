@@ -404,7 +404,7 @@ int after_boss()
 
 void gameplay() {
   GAMEPLAY_MUS = MOD_TEMP31;
-  
+  BATTLE_OUTCOME = 0;
   CURRENT_MOD = GAMEPLAY_MUS;
   
   drawInstant(PERSP_FWD);
