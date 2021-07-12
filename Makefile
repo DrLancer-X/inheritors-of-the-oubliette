@@ -158,7 +158,7 @@ soundbank.bin soundbank.h : $(ITFILES)
 #---------------------------------------------------------------------------------
 	@cp $(ITFILES) .
 	for i in $(WAVFILES) ; do \
-		sox $$i -b 8 `basename $$i` gain -1 channels 1 rate -I 31536 dither -s ; \
+		sox $$i -D `basename $$i` rate -I 31536 ; \
 	done
 	@mmutil $(AUDIOFILES) -v -osoundbank.bin -hsoundbank.h
 
