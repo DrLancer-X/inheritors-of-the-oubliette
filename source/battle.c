@@ -1255,7 +1255,9 @@ int check_space(uint8_t dir, int fliers)
   uint8_t right = (dir + 1) & 3;
   
   if (getTexDirFrom(x, y, z, dir) % 128) {
+    spaces[3] = 0;
     spaces[4] = 0;
+    spaces[5] = 0;
   }
   if (getTexDirFrom(x, y, z, left) % 128) {
     spaces[0] = 0;
