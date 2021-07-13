@@ -85,12 +85,14 @@ void plot2() {
 void plot3() {
 	draw_sp(2);
 	wait();
+	hide_sp();
+	
 	show_message(D_SKY, "\"I finally managed to track you down! You will pay for what you did to the young scion of the Dragonfly clan, Dragonfly Thunderbolt!\"");
 	show_message(Q_HAWK, "\"There's more of you Dragonfly people around? All right, I'll bite. What's your name?\"");
 	show_message(D_SKY, "\"You would do well to learn the name of Dragonfly Sky, the Holy Daughter of the Dragonfly clan!\"");
 	show_message(Q_STAR, "\"I'm not sure we really need to learn it, though.\"");
 	
-	hide_sp();
+	
 	force_random_encounter(22);
 	if (after_boss()) return;
 	show_message(D_SKY, "\"How is this possible?\"");
