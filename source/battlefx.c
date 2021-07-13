@@ -102,6 +102,13 @@ static void add_miss(int x, int y)
 
 int get_weapon()
 {
+  // If this is a creature that carries a weapon, use it
+  if (user->side == 1) {
+    if (user->e->equiptype == EQUIP_WEAPON) {
+      return user->e->spriteid;
+    }
+  }
+  
 	return user->p->equip[EQUIP_WEAPON];
 }
 
@@ -117,9 +124,10 @@ void get_base_stats(int *acc, int *dmg, int *elem, int *inflict)
 	} else { // Weapon
 		int w = get_weapon();
 		if (w == 0xFF) {
-			// Bare handed
+			// No weapon
+			// Damage is equal to 1/4 of str
 			*acc = 90;
-			*dmg = 5;
+			*dmg = get_str(user->id + user->side * 2) / 4;
 			*elem = 0xFF;
 			*inflict = 0xFF;
 		} else {
@@ -427,20 +435,20 @@ int use_tech_indiv(int anim_timer_, int t_, struct actor *user_, struct actor *t
 	sp = sp_;
 	user = user_;
 	targ = targ_;
-  id = targ->id + (targ->side * 2);
-  get_bounds(id, &x1, &y1, &x2, &y2);
-  cx = (x1 + x2) / 2;
-  cy = (y1 + y2) / 2;
-  
-  elem_col();
-  
-  if (anim_timer == 0) {
+	id = targ->id + (targ->side * 2);
+	get_bounds(id, &x1, &y1, &x2, &y2);
+	cx = (x1 + x2) / 2;
+	cy = (y1 + y2) / 2;
+	
+	elem_col();
+	
+	if (anim_timer == 0) {
 		targ_hit = 0;
 		digits_n = 0;
 	}
 	
 	if (new_tick) draw_digits();
-  
+	
 	int r = cont_atk();
 	if (r == 1) {
 		// Waiting for digits to finish displaying
