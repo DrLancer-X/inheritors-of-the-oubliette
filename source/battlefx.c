@@ -248,7 +248,7 @@ static void damage()
 	if (targ->defending) dmg /= 2;
 	
 	// Target agility
-	inacc = inacc * (10 + get_agi(targ->id + targ->side * 2)) / 10;
+	inacc = inacc * (100 + get_agi(targ->id + targ->side * 2)) / 100;
 	
 	// Inviso
 	if (targ->p->status[STATUS_INVISO] > 0) inacc = 100 - ((100 - inacc) / 2);
