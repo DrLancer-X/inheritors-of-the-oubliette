@@ -849,7 +849,7 @@ uint8_t status_save() {
 				return 0;
 			}
 			else if (INKEY_PRESSED & KEY_A) {
-				mmEffect(SFX_SELECT);
+				mmEffect(SFX_DECIDE);
 				save_sel(cur);
 				free(saves);
 				saves = NULL;
