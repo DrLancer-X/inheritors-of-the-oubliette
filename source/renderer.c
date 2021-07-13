@@ -276,8 +276,9 @@ uint32_t render_draw(const struct lvl_tile *lvltiles, volatile uint16_t *scr, ui
 
     } else { // cols
       if (texid < 128) {
-        wall_solid:
         tex = &textures_walls_bin[TEX_W * TEX_H * (texid - 1)];
+        wall_solid:
+        
         count = newrcd[pos++]; // lp_count
         for (i = 0; i < count; i++) {
           xy = newrcd[pos++];
