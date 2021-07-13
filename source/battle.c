@@ -61,6 +61,9 @@ struct actor *actors;
 static uint8_t spaces[6];
 static uint32_t target_ticker_base;
 
+static uint8_t rndlog[256];
+static uint8_t rndlog_n;
+
 /*
 static uint8_t spr_refx[6];
 static uint8_t spr_flip[6];
@@ -776,19 +779,30 @@ int targ_sel(struct actor *a, int side, int all, int targdead, int ranged)
 void death_drop(struct actor *a)
 {
   uint8_t spoil = 0xFF;
+  rndlog[rndlog_n++] = 212;
+  rndlog[rndlog_n++] = a->e->spriteid;
   if (a->e->spriteid >= 20) {
+    rndlog[rndlog_n++] = 213;
     // Rivals always drop their equipment
     spoil = a->e->spriteid + 80;
+    rndlog[rndlog_n++] = spoil;
   } else {
+    rndlog[rndlog_n++] = 214;
     int roll = rand() % 100 + 1;
+    rndlog[rndlog_n++] = roll;
+    rndlog[rndlog_n++] = a->e->gem_accum;
     if (roll <= a->e->gem_accum) {
+      
       // Won a soulstone
       spoil = a->e->spriteid + 40;
       // Do another roll, see if we get equipment
       roll = rand() % 100 + 1;
+      rndlog[rndlog_n++] = roll;
+      rndlog[rndlog_n++] = 25;
       if (roll <= 25) {
         // Upgrade it to equipment
         spoil = a->e->spriteid + 80;
+        rndlog[rndlog_n++] = spoil;
       }
     }
   }
@@ -1206,6 +1220,7 @@ void allocate_players()
 
 void battle_engine(uint8_t *enemies, int ambush)
 {
+  rndlog_n = 0;
   for (int i = 0; i < 6; i++) BATTLE_SPOILS[i] = 0xFF;
   
   actors = malloc(sizeof(actors[0]) * MAX_ACTORS);
@@ -1232,6 +1247,15 @@ void battle_engine(uint8_t *enemies, int ambush)
   free(actors);
   
   battle_transitionout();
+  /*
+  char txt[312];
+  txt_set(txt, ":");
+  for (int i = 0; i < rndlog_n; i++) {
+    txt_append_str(txt, " ");
+    txt_append_num(txt, rndlog[i]);
+  }
+  show_message(-1, txt);
+  */
 }
 
 int check_space(uint8_t dir, int fliers)
