@@ -1481,7 +1481,7 @@ void random_encounter()
   }
 }
 
-void force_random_encounter(int idx)
+void force_fixed_encounter(int idx)
 {
   uint8_t elist[6];
   for (int i = 0; i < 6; i++) {
