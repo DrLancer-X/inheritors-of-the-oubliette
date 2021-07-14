@@ -133,7 +133,7 @@ void show_message(int portrait, const char *text)
 			int sy = (i / 3) * 2 + 8;
 			fast_copy(OBJ_CHR(sx, sy), btl_menuicons_bin + (ico << 8) + 0, 64);
 			fast_copy(OBJ_CHR(sx, sy+1), btl_menuicons_bin + (ico << 8) + 64, 64);
-			OBJSET(11 - i, sx, sy, spoils_x, 80, 1, ATTR0_SQUARE | ATTR0_BLEND, ATTR1_SIZE_16x16, 0);
+			OBJSET(11 - i, sx, sy, spoils_x, 80 + MESSAGE_OFFSET, 1, ATTR0_SQUARE | ATTR0_BLEND, ATTR1_SIZE_16x16, 0);
 			spoils_x += 24;
 			VBlankIntrWait();
 			if (INKEY_PRESSED & (KEY_A | KEY_B)) break;
