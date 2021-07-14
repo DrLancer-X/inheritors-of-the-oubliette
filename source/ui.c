@@ -27,6 +27,8 @@
 #include "btl_nums_bin.h"
 #include "btl_nmedata_bin.h"
 
+int MESSAGE_OFFSET = 0;
+
 void wrap_text(int pos_x, int pos_y, const int *linelim, int linespacing, const char *text)
 {
 	char linbuf[100];
@@ -93,12 +95,12 @@ void show_message(int portrait, const char *text)
   VBlankIntrWait();
   
   if (portrait >= 0)
-		OBJSET(12, 4, 4, 24+1, 48+1, 8, ATTR0_SQUARE | ATTR0_BLEND | ATTR0_AFF, ATTR1_SIZE_16x16 | ATTR1_AFF_ID(8), 0);
+		OBJSET(12, 4, 4, 24+1, 48+1 + MESSAGE_OFFSET, 8, ATTR0_SQUARE | ATTR0_BLEND | ATTR0_AFF, ATTR1_SIZE_16x16 | ATTR1_AFF_ID(8), 0);
   
   // Message box
-  OBJSET(15, 0, 8, 24, 48, 1, ATTR0_SQUARE | ATTR0_BLEND | ATTR0_AFF, ATTR1_SIZE_64x64 | ATTR1_AFF_ID(8), 0);
-  OBJSET(14, 8, 8, 24+64, 48, 1, ATTR0_SQUARE | ATTR0_BLEND | ATTR0_AFF, ATTR1_SIZE_64x64 | ATTR1_AFF_ID(8), 0);
-  OBJSET(13, 16, 8, 24+128, 48, 1, ATTR0_SQUARE | ATTR0_BLEND | ATTR0_AFF, ATTR1_SIZE_64x64 | ATTR1_AFF_ID(8), 0);
+  OBJSET(15, 0, 8, 24, 48 + MESSAGE_OFFSET, 1, ATTR0_SQUARE | ATTR0_BLEND | ATTR0_AFF, ATTR1_SIZE_64x64 | ATTR1_AFF_ID(8), 0);
+  OBJSET(14, 8, 8, 24+64, 48 + MESSAGE_OFFSET, 1, ATTR0_SQUARE | ATTR0_BLEND | ATTR0_AFF, ATTR1_SIZE_64x64 | ATTR1_AFF_ID(8), 0);
+  OBJSET(13, 16, 8, 24+128, 48 + MESSAGE_OFFSET, 1, ATTR0_SQUARE | ATTR0_BLEND | ATTR0_AFF, ATTR1_SIZE_64x64 | ATTR1_AFF_ID(8), 0);
   
   // Quick fading anim
   REG_BLDCNT = BLD_BOT(BLD_BG2 | BLD_BACKDROP) | BLD_STD;
@@ -106,10 +108,10 @@ void show_message(int portrait, const char *text)
     uint32_t scale = 576 - (i << 4);
     uint32_t offset = 64 - (64 * 256 / scale);
     // 48x13
-    obj_set_pos(&oam_mem[15], 24 + offset, 48);
-    obj_set_pos(&oam_mem[13], 24+128 - offset, 48);
+    obj_set_pos(&oam_mem[15], 24 + offset, 48 + MESSAGE_OFFSET);
+    obj_set_pos(&oam_mem[13], 24+128 - offset, 48 + MESSAGE_OFFSET);
     
-    obj_set_pos(&oam_mem[12], 24+1 + offset * 7 / 5, 48+1 + offset * 3 / 8);
+    obj_set_pos(&oam_mem[12], 24+1 + offset * 7 / 5, 48+1 + offset * 3 / 8 + MESSAGE_OFFSET);
     AFFSET(8, scale, 0, 0, scale);
     REG_BLDALPHA = BLD_EVA(min(i, 16)) | BLD_EVB(max(16-i, 0));
     //REG_BLDALPHA = BLD_EVA(16) | BLD_EVB(0);

@@ -23,6 +23,7 @@
 do { \
 if (((v_) == gs.plot[PLOT_BASE]) && ((x_) == gs.x) && ((y_) == gs.y) && ((z_) == gs.z)) { \
   f_(); \
+  MESSAGE_OFFSET = 0; \
   gs.plot[PLOT_BASE] = v_+1; \
 } \
 } while(0);
@@ -37,6 +38,7 @@ if (((v_) == gs.plot[PLOT_BASE]) && ((x_) == gs.x) && ((y_) == gs.y) && ((z_) ==
 
 static void draw_sp(int s)
 {
+	MESSAGE_OFFSET = -32;
 	fast_copy(OBJ_PAL(15), btl_tachiepal_bin + (s << 7) + (COLSPACE << 5), 32);
 	for (uint32_t y = 0; y < 8; y++) {
 		fast_copy(OBJ_CHR(24, 0 + y), btl_tachiegfx_bin + (y << 8) + (s << 11), 256);
@@ -69,17 +71,19 @@ void plot1() {
 void plot2() {
 	draw_sp(1);
 	wait();
-	hide_sp();
 	show_message(D_THUNDER, "\"Halt! You have trespassed upon the sacred training grounds of the great Dragonfly clan! Hand over any treasures you have found and leave at once!\"");
 	show_message(Q_STAR, "\"Who the hell are you? I've never heard of this Dragonfly clan before. Our Qilin clan has been using these grounds to train our chosen sons and daughters for hundreds of thousands of years!\"");
 	show_message(D_THUNDER, "\"That you do not show proper respect to the great Dragonfly Thunderbolt is an insult so great that it can only be washed away with the blood of your entire clan!\"");
 	show_message(Q_HAWK, "\"Listen, I don't know who you are and I don't care. I'm only going to warn you once. Turn around and leave now or you will regret it.\"");
 	show_message(D_THUNDER, "\"Apparently rudeness and overconfidence go hand in hand. Very well, but it is you who will soon regret your rash choice of actions!\"");
+	hide_sp();
 	force_random_encounter(21);
 	if (after_boss()) return;
+	draw_sp(1);
+	wait();
 	show_message(D_THUNDER, "\"They are too powerful. I can't go on. Forgive me, Patriarch.\"");
 	show_message(Q_HAWK, "\"I told you not to mess with us.\"");
-
+	hide_sp();
 	gs.plot[PLOT_ELVL] = 8;
 }
 void plot3() {
@@ -152,14 +156,14 @@ void plot6() {
 int plot_handle()
 {
 	BATTLE_CANNOT_RUN = 1;
-	PLOT_HANDLE(0,   8, 9, 1, plot1);
-	PLOT_HANDLE(1,   7, 12, 3, plot2);
-	PLOT_HANDLE(2,   2, 7, 6, plot3);
-	PLOT_HANDLE(3,   5, 7, 12, plot4);
+	PLOT_HANDLE(0,   8, 9, 1, plot1);   //  2/280
+	PLOT_HANDLE(1,   7, 12, 3, plot2);  // 20/280
+	PLOT_HANDLE(2,   2, 9, 6, plot3);   // 73/280
+	PLOT_HANDLE(3,   5, 8, 15, plot4);  // 154/280
 
-	PLOT_HANDLE(4,   14, 3, 12, plot5);
-	PLOT_HANDLE(5,   12, 2, 0, plot6);
-	PLOT_HANDLE(5,   12, 3, 0, plot6);
+	PLOT_HANDLE(4,   14, 3, 12, plot5); // 219/280
+	PLOT_HANDLE(5,   12, 2, 0, plot6);  // 
+	PLOT_HANDLE(5,   12, 3, 0, plot6);  //
 	BATTLE_CANNOT_RUN = 0;
 	if (BATTLE_OUTCOME == -1) return 1;
 	if (gs.plot[PLOT_BASE] == 6) {
