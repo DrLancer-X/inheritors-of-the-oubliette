@@ -354,17 +354,15 @@ int openOutsideDoor(uint8_t dir)
   }
   gs.map ^= 1;
   loadMap();
-  
-  drawInstant(PERSP_STEP2);
-  for (int i = 0; i <= 16; i++) {
-    REG_BLDY = 16 - i;
-    VBlankIntrWait();
-  }
-  for (int i = 0; i <= MOVE_WAIT; i++) VBlankIntrWait();
   gs.x += getDirX(dir);
   gs.y += getDirY(dir);
   gs.z += getDirZ(dir);
   drawInstant(PERSP_FWD);
+
+  for (int i = 0; i <= 16; i++) {
+    REG_BLDY = 16 - i;
+    VBlankIntrWait();
+  }
   
   return 1;
 }
