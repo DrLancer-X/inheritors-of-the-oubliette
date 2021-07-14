@@ -3,6 +3,7 @@
 
 void battle_engine(uint8_t *enemies, int ambush);
 void random_encounter();
+void force_camera_facing();
 void force_fixed_encounter(int idx);
 void get_bounds(int cur, int *x1, int *y1, int *x2, int *y2);
 

@@ -69,6 +69,7 @@ void plot1() {
 }
 
 void plot2() {
+	force_camera_facing();
 	draw_sp(1);
 	wait();
 	show_message(D_THUNDER, "\"Halt! You have trespassed upon the sacred training grounds of the great Dragonfly clan! Hand over any treasures you have found and leave at once!\"");
@@ -77,76 +78,93 @@ void plot2() {
 	show_message(Q_HAWK, "\"Listen, I don't know who you are and I don't care. I'm only going to warn you once. Turn around and leave now or you will regret it.\"");
 	show_message(D_THUNDER, "\"Apparently rudeness and overconfidence go hand in hand. Very well, but it is you who will soon regret your rash choice of actions!\"");
 	hide_sp();
-	force_random_encounter(21);
+	force_fixed_encounter(21);
 	if (after_boss()) return;
 	draw_sp(1);
 	wait();
 	show_message(D_THUNDER, "\"They are too powerful. I can't go on. Forgive me, Patriarch.\"");
 	show_message(Q_HAWK, "\"I told you not to mess with us.\"");
+	wait();
 	hide_sp();
 	gs.plot[PLOT_ELVL] = 8;
 }
 void plot3() {
+	force_camera_facing();
 	draw_sp(2);
 	wait();
-	hide_sp();
-	
 	show_message(D_SKY, "\"I finally managed to track you down! You will pay for what you did to the young scion of the Dragonfly clan, Dragonfly Thunderbolt!\"");
 	show_message(Q_HAWK, "\"There's more of you Dragonfly people around? All right, I'll bite. What's your name?\"");
 	show_message(D_SKY, "\"You would do well to learn the name of Dragonfly Sky, the Holy Daughter of the Dragonfly clan!\"");
 	show_message(Q_STAR, "\"I'm not sure we really need to learn it, though.\"");
 	
-	
-	force_random_encounter(22);
+	hide_sp();
+	force_fixed_encounter(22);
 	if (after_boss()) return;
+	draw_sp(2);
+	wait();
 	show_message(D_SKY, "\"How is this possible?\"");
 	show_message(Q_HAWK, "\"All we wanted you to do was leave us alone... what was your name again?\"");
 	show_message(D_SKY, "\"You... you... augh!\"");
+	wait();
+	hide_sp();
 	gs.plot[PLOT_ELVL] = 12;
 }
 void plot4() {
+	force_camera_facing();
 	draw_sp(3);
 	wait();
-	hide_sp();
 	show_message(D_PATRIARCH, "\"How dare you spill the blood of the younger generation of the Dragonfly clan! This insult you have dealt us is close to unendurable. Now only I, Dragonfly Patriarch, can address this insult to my clan!\"");
 	show_message(Q_STAR, "\"Listen, we have no great emnity with you. Your clan simply needs to do a better job keepings its Chosen in check. We are willing to walk away.\"");
 	show_message(D_PATRIARCH, "\"The time for words has long passed.\"");
 	show_message(Q_HAWK, "\"He's in no mood to negotiate. Star, get ready!\"");
-	
-	force_random_encounter(23);
+	hide_sp();
+	force_fixed_encounter(23);
 	if (after_boss()) return;
+	draw_sp(3);
+	wait();
 	show_message(D_PATRIARCH, "\"It's not over. You will not get away with this.\"");
+	wait();
+	hide_sp();
 	gs.plot[PLOT_ELVL] = 16;
 }
 void plot5() {
+	force_camera_facing();
 	draw_sp(4);
 	wait();
-	hide_sp();
 	show_message(D_RAVEN, "\"I see some intrusive insects have emerged.\"");
 	show_message(Q_HAWK, "\"Oh great. Don't tell me, you're the Dragonfly Matriarch and you're really angry with us for demolishing your clan.\"");
 	show_message(D_RAVEN, "\"I don't have one whit of care for your clan squabbles, but I will take possession of those spirit crystals and spirit items you've been hoarding.\"");
 	show_message(Q_STAR, "\"We aren't going to let you do that!\"");
-
-	force_random_encounter(24);
+	hide_sp();
+	force_fixed_encounter(24);
 	if (after_boss()) return;
+	draw_sp(4);
+	wait();
 	show_message(D_RAVEN, "\"Thunder... Sky... I'm sorry...\"");
+	wait();
+	hide_sp();
 	gs.plot[PLOT_ELVL] = 20;
 }
 void plot6() {
+	force_camera_facing();
 	draw_sp(5);
 	wait();
-	hide_sp();
 	show_message(R_EMPEROR, "\"I see others have come for what is rightfully mine, but only I, Righteous Emperor, have the strength to take it!\"");
 	show_message(Q_HAWK, "\"Try telling that to the Dragonfly clan.\"");
 	show_message(R_EMPEROR, "\"Laugh it up while you still can. Your adventure and your lives end here.\"");
 	show_message(Q_STAR, "\"Hawk, watch out!\"");
-
-	force_random_encounter(25);
+	hide_sp();
+	force_fixed_encounter(25);
 	if (after_boss()) return;
+	draw_sp(5);
+	wait();
 	show_message(R_EMPEROR, "\"What... how?\"");
 	show_message(Q_HAWK, "\"We learned how to fight here. Our ancestors stretching back to time memorial trained on these grounds.\"");
 	show_message(Q_STAR, "\"As far as we are concerned, this place is ours. Who are you, and why did you come here?\"");
 	show_message(R_EMPEROR, "\"Ugh...\"");
+	wait();
+	hide_sp();
+	wait();
 	show_message(Q_HAWK, "\"He's dead.\"");
 	show_message(Q_STAR, "\"I'm glad that's over. Clan brother Hawk, grab everything that you can and let's go.\"");
 	show_message(Q_HAWK, "\"The Qilin will never be vanquished.\"");
@@ -160,7 +178,6 @@ int plot_handle()
 	PLOT_HANDLE(1,   7, 12, 3, plot2);  // 20/280
 	PLOT_HANDLE(2,   2, 9, 6, plot3);   // 73/280
 	PLOT_HANDLE(3,   5, 8, 15, plot4);  // 154/280
-
 	PLOT_HANDLE(4,   14, 3, 12, plot5); // 219/280
 	PLOT_HANDLE(5,   12, 2, 0, plot6);  // 
 	PLOT_HANDLE(5,   12, 3, 0, plot6);  //

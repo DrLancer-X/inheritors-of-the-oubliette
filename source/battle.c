@@ -1349,10 +1349,8 @@ int check_space(uint8_t dir, int fliers)
   return c;
 }
 
-void random_encounter_dir(uint8_t *elist, int dir)
+static void change_face_dir(int dir)
 {
-  CURRENT_MOD = BATTLE_MOD;
-  
   if (dir == -1) {
     turnLeft();
   } else if (dir == 1) {
@@ -1361,6 +1359,14 @@ void random_encounter_dir(uint8_t *elist, int dir)
     turnRight();
     turnRight();
   }
+}
+
+void random_encounter_dir(uint8_t *elist, int dir)
+{
+  CURRENT_MOD = BATTLE_MOD;
+  
+  change_face_dir(dir);
+  
   check_space(gs.d, 1);
   
   uint8_t enemies[6];
@@ -1481,6 +1487,30 @@ void random_encounter()
   }
 }
 
+void force_camera_facing()
+{
+  check_space(gs.d, 0);
+  if (spaces[1] == 1) {
+    change_face_dir(0);
+    return;
+  }
+  check_space((gs.d - 1) & 3, 0);
+  if (spaces[1] == 1) {
+    change_face_dir(-1);
+    return;
+  }
+  check_space((gs.d + 1) & 3, 0);
+  if (spaces[1] == 1) {
+    change_face_dir(1);
+    return;
+  }
+  check_space((gs.d + 2) & 3, 0);
+  if (spaces[1] == 1) {
+    change_face_dir(2);
+    return;
+  }
+}
+
 void force_fixed_encounter(int idx)
 {
   uint8_t elist[6];
@@ -1488,26 +1518,5 @@ void force_fixed_encounter(int idx)
     elist[i] = 0xFF;
   }
   elist[0] = idx;
-  
-  check_space(gs.d, 0);
-  if (spaces[1] == 1) {
-    random_encounter_dir(elist, 0);
-    return;
-  }
-  
-  check_space((gs.d - 1) & 3, 0);
-  if (spaces[1] == 1) {
-    random_encounter_dir(elist, -1);
-    return;
-  }
-  check_space((gs.d + 1) & 3, 0);
-  if (spaces[1] == 1) {
-    random_encounter_dir(elist, 1);
-    return;
-  }
-  check_space((gs.d + 2) & 3, 0);
-  if (spaces[1] == 1) {
-    random_encounter_dir(elist, 2);
-    return;
-  }
+  random_encounter_dir(elist, 0);
 }
