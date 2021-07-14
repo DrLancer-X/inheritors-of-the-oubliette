@@ -79,8 +79,8 @@ void plot2() {
 	show_message(D_THUNDER, "\"Apparently rudeness and overconfidence go hand in hand. Very well, but it is you who will soon regret your rash choice of actions!\"");
 	hide_sp();
 	force_fixed_encounter(21);
-	if (after_boss()) return;
 	draw_sp(1);
+	if (after_boss()) return;
 	wait();
 	show_message(D_THUNDER, "\"They are too powerful. I can't go on. Forgive me, Patriarch.\"");
 	show_message(Q_HAWK, "\"I told you not to mess with us.\"");
@@ -99,8 +99,8 @@ void plot3() {
 	
 	hide_sp();
 	force_fixed_encounter(22);
-	if (after_boss()) return;
 	draw_sp(2);
+	if (after_boss()) return;
 	wait();
 	show_message(D_SKY, "\"How is this possible?\"");
 	show_message(Q_HAWK, "\"All we wanted you to do was leave us alone... what was your name again?\"");
@@ -119,8 +119,8 @@ void plot4() {
 	show_message(Q_HAWK, "\"He's in no mood to negotiate. Star, get ready!\"");
 	hide_sp();
 	force_fixed_encounter(23);
-	if (after_boss()) return;
 	draw_sp(3);
+	if (after_boss()) return;
 	wait();
 	show_message(D_PATRIARCH, "\"It's not over. You will not get away with this.\"");
 	wait();
@@ -137,8 +137,8 @@ void plot5() {
 	show_message(Q_STAR, "\"We aren't going to let you do that!\"");
 	hide_sp();
 	force_fixed_encounter(24);
-	if (after_boss()) return;
 	draw_sp(4);
+	if (after_boss()) return;
 	wait();
 	show_message(D_RAVEN, "\"Thunder... Sky... I'm sorry...\"");
 	wait();
@@ -155,8 +155,8 @@ void plot6() {
 	show_message(Q_STAR, "\"Hawk, watch out!\"");
 	hide_sp();
 	force_fixed_encounter(25);
-	if (after_boss()) return;
 	draw_sp(5);
+	if (after_boss()) return;
 	wait();
 	show_message(R_EMPEROR, "\"What... how?\"");
 	show_message(Q_HAWK, "\"We learned how to fight here. Our ancestors stretching back to time memorial trained on these grounds.\"");
