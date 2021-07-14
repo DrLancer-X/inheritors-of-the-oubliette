@@ -28,7 +28,7 @@ static const uint8_t *textures_twalls_bin;
 
 uint8_t col_lut[256 * 32];
 
-uint16_t poly_list[3500];
+uint16_t poly_list[2300];
 uint16_t *curr_poly_list;
 
 const uint8_t *palette_data;
