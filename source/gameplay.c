@@ -339,7 +339,7 @@ void victory()
     if (ico != 0xFF) {
       if (ico >= 80) { // equipment
         gs.equip_qty[ico - 80]++;
-        got_eq = 1;
+        if (ico - 80 < 20) got_eq = 1;
       } else if (ico >= 40) { // soulstone
         gs.gem_qty[ico - 40]++;
         got_gem = 1;
@@ -571,6 +571,7 @@ void gameplay() {
           show_message(-1, "Stepping on the tile has healed and reenergised you.");
         }
         if (plot_handle() == 1) return;
+        else 	CURRENT_MOD = GAMEPLAY_MUS;
         if (!skip_encounters) {
           gs.plot[PLOT_ENC]--;
           if (gs.plot[PLOT_ENC] <= 0) {
