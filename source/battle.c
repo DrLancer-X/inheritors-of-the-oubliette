@@ -936,6 +936,7 @@ void use_tech(struct actor *user, struct actor *targ, uint8_t tech, int all, int
   int anim_timer = 0;
   int fin = 0;
 
+  uint8_t sp_hidefrom = 84;
   while (fin < targets_n) {
     uint8_t sp = 83;
     draw_enemies(0, 0, 0);
@@ -950,15 +951,20 @@ void use_tech(struct actor *user, struct actor *targ, uint8_t tech, int all, int
         }
       }
     }
+    
+    
+    for (uint8_t i = sp; i > sp_hidefrom; i--) {
+      obj_hide(&oam_mem[i]);
+    }
     anim_timer++;
 
     VBlankIntrWait();
     
-    for (uint8_t i = sp; i < 84; i++) {
-      obj_hide(&oam_mem[i]);
-    }
+    sp_hidefrom = sp;
   }
-  
+  for (uint8_t i = sp_hidefrom; i < 84; i++) {
+    obj_hide(&oam_mem[i]);
+  }
   // Aftermath processing
   if (aftermath()) return;
 }
@@ -988,8 +994,8 @@ void get_tech_info(int tech, int *tech_cost, int *tech_side, int *tech_targdead,
 
 void battle_exec_enemy(struct actor *a)
 {
-  // If we have the MP to use our skill, there is a 50% chance of using it
-  int use_skill = rand() % 2;
+  // If we have the MP to use our skill, there is a 40% chance of using it
+  int use_skill = (rand() % 10) <= 3;
   int tech = a->e->spriteid;
   int tech_cost, tech_side, tech_targdead, tech_all;
   get_tech_info(tech, &tech_cost, &tech_side, &tech_targdead, &tech_all);
