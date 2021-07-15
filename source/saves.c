@@ -173,6 +173,7 @@ void load_save(uint8_t slot)
 {
 	size_t save_pos = slot * save_size + sizeof(struct header_info);
 	read_bytes(&gs, &sram[save_pos + sizeof(struct saveinfo)], sizeof(struct pd_gamestate));
+	TICKER = gs.ticks;
 }
 
 void load_config()
