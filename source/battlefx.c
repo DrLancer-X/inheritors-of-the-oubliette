@@ -323,9 +323,9 @@ static int plain_atk()
 	}
   if (t < 30) {
 		if (t >= 15 && t < 30) target_hurt();
-    ODRW(RAND(19, 26), 2, cx - 12 - 30 + (t * 2), cy - 12 - 30 + (t * 2), 4, ATTR0_SQUARE, ATTR1_SIZE_8x8, 0);
-    ODRW(RAND(19, 26), 2, cx - 4 - 30 + (t * 2), cy - 4 - 30 + (t * 2), 4, ATTR0_SQUARE, ATTR1_SIZE_8x8, 0);
-    ODRW(RAND(19, 26), 2, cx + 4 - 30 + (t * 2), cy + 4 - 30 + (t * 2), 4, ATTR0_SQUARE, ATTR1_SIZE_8x8, 0);
+    ODRW(RAND(20, 27), 2, cx - 12 - 30 + (t * 2), cy - 12 - 30 + (t * 2), 4, ATTR0_SQUARE, ATTR1_SIZE_8x8, 0);
+    ODRW(RAND(20, 27), 2, cx - 4 - 30 + (t * 2), cy - 4 - 30 + (t * 2), 4, ATTR0_SQUARE, ATTR1_SIZE_8x8, 0);
+    ODRW(RAND(20, 27), 2, cx + 4 - 30 + (t * 2), cy + 4 - 30 + (t * 2), 4, ATTR0_SQUARE, ATTR1_SIZE_8x8, 0);
     return 0;
   } else {
     return 1;
@@ -342,9 +342,9 @@ static int tech_atk()
 	}
   if (t < 30) {
 		if (t >= 15 && t < 30) target_hurt();
-    ODRW(RAND(19, 31), 1, cx + RAND(-30,30) - 4, cy + RAND(-30,30) - 4, 4, ATTR0_SQUARE, ATTR1_SIZE_8x8, 0);
-    ODRW(RAND(19, 31), 1, cx + RAND(-30,30) - 4, cy + RAND(-30,30) - 4, 4, ATTR0_SQUARE, ATTR1_SIZE_8x8, 0);
-    ODRW(RAND(19, 31), 1, cx + RAND(-30,30) - 4, cy + RAND(-30,30) - 4, 4, ATTR0_SQUARE, ATTR1_SIZE_8x8, 0);
+    ODRW(RAND(20, 26) + (t / 5), 1, cx + RAND(-30,30) - 4, cy + RAND(-30,30) - 4, 4, ATTR0_SQUARE, ATTR1_SIZE_8x8, 0);
+    ODRW(RAND(20, 26) + (t / 5), 1, cx + RAND(-30,30) - 4, cy + RAND(-30,30) - 4, 4, ATTR0_SQUARE, ATTR1_SIZE_8x8, 0);
+    ODRW(RAND(20, 26) + (t / 5), 1, cx + RAND(-30,30) - 4, cy + RAND(-30,30) - 4, 4, ATTR0_SQUARE, ATTR1_SIZE_8x8, 0);
     return 0;
   } else {
     return 1;
@@ -361,9 +361,9 @@ static int heal_atk()
 	}
   if (t < 30) {
 		if (t >= 15 && t < 30) target_healed();
-    ODRW(RAND(19, 31), 1, cx + RAND(-30,30) - 4, cy + RAND(-30,30) - 4, 4, ATTR0_SQUARE, ATTR1_SIZE_8x8, 0);
-    ODRW(RAND(19, 31), 1, cx + RAND(-30,30) - 4, cy + RAND(-30,30) - 4, 4, ATTR0_SQUARE, ATTR1_SIZE_8x8, 0);
-    ODRW(RAND(19, 31), 1, cx + RAND(-30,30) - 4, cy + RAND(-30,30) - 4, 4, ATTR0_SQUARE, ATTR1_SIZE_8x8, 0);
+    ODRW(RAND(20, 26) + (t / 5), 1, cx + RAND(-30,30) - 4, cy + RAND(-30,30) - 4, 4, ATTR0_SQUARE, ATTR1_SIZE_8x8, 0);
+    ODRW(RAND(20, 26) + (t / 5), 1, cx + RAND(-30,30) - 4, cy + RAND(-30,30) - 4, 4, ATTR0_SQUARE, ATTR1_SIZE_8x8, 0);
+    ODRW(RAND(20, 26) + (t / 5), 1, cx + RAND(-30,30) - 4, cy + RAND(-30,30) - 4, 4, ATTR0_SQUARE, ATTR1_SIZE_8x8, 0);
     return 0;
   } else {
     return 1;
