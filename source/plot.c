@@ -45,6 +45,18 @@ static void draw_sp(int s)
 	}
 	OBJSET(127, 24, 0, 88, 80, 15, ATTR0_SQUARE, ATTR1_SIZE_64x64, 0);
 }
+static void draw_sp_fadein(int s)
+{
+	draw_sp(s);
+	REG_BLDCNT = BLD_BOT(BLD_BG2 | BLD_BACKDROP) | BLD_STD;
+	REG_BLDALPHA = BLDA_BUILD(0, 16);
+	OBJSET(127, 24, 0, 88, 80, 15, ATTR0_SQUARE | ATTR0_BLEND, ATTR1_SIZE_64x64, 0);
+	for (int i = 0; i <= 16; i++) {
+    REG_BLDALPHA = BLDA_BUILD(i, 16-i);
+    VBlankIntrWait();
+	}
+	OBJSET(127, 24, 0, 88, 80, 15, ATTR0_SQUARE, ATTR1_SIZE_64x64, 0);
+}
 static void hide_sp()
 {
 	obj_hide(&oam_mem[127]);
@@ -111,7 +123,7 @@ void plot1() {
 void plot2() {
 	CURRENT_MOD = MOD_TEMP32;
 	force_camera_facing();
-	draw_sp(1);
+	draw_sp_fadein(1);
 	wait();
 	show_message(D_THUNDER, "\"Halt! You have trespassed upon the sacred training grounds of the great Dragonfly clan! Hand over any treasures you have found and leave at once!\"");
 	show_message(Q_STAR, "\"Who the hell are you? I've never heard of this Dragonfly clan before. Our Qilin clan has been using these grounds to train our chosen sons and daughters for hundreds of thousands of years!\"");
@@ -133,7 +145,7 @@ void plot2() {
 void plot3() {
 	CURRENT_MOD = MOD_TEMP32;
 	force_camera_facing();
-	draw_sp(2);
+	draw_sp_fadein(2);
 	wait();
 	show_message(D_SKY, "\"I finally managed to track you down! You will pay for what you did to the young scion of the Dragonfly clan, Dragonfly Thunderbolt!\"");
 	show_message(Q_HAWK, "\"There's more of you Dragonfly people around? All right, I'll bite. What's your name?\"");
@@ -156,7 +168,7 @@ void plot3() {
 void plot4() {
 	CURRENT_MOD = MOD_TEMP32;
 	force_camera_facing();
-	draw_sp(3);
+	draw_sp_fadein(3);
 	wait();
 	show_message(D_PATRIARCH, "\"How dare you spill the blood of the younger generation of the Dragonfly clan! This insult you have dealt us is close to unendurable. Now only I, Dragonfly Patriarch, can address this insult to my clan!\"");
 	show_message(Q_STAR, "\"Listen, we have no great emnity with you. Your clan simply needs to do a better job keepings its Chosen in check. We are willing to walk away.\"");
@@ -176,7 +188,7 @@ void plot4() {
 void plot5() {
 	CURRENT_MOD = MOD_TEMP32;
 	force_camera_facing();
-	draw_sp(4);
+	draw_sp_fadein(4);
 	wait();
 	show_message(D_RAVEN, "\"I see some intrusive insects have emerged.\"");
 	show_message(Q_HAWK, "\"Oh great. Don't tell me, you're the Dragonfly Matriarch and you're really angry with us for demolishing your clan.\"");
@@ -196,7 +208,7 @@ void plot5() {
 void plot6() {
 	CURRENT_MOD = MOD_TEMP32;
 	force_camera_facing();
-	draw_sp(5);
+	draw_sp_fadein(5);
 	wait();
 	show_message(R_EMPEROR, "\"I see others have come for what is rightfully mine, but only I, Righteous Emperor, have the strength to take it!\"");
 	show_message(Q_HAWK, "\"Try telling that to the Dragonfly clan.\"");
