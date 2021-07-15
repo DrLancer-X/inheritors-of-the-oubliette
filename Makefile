@@ -79,7 +79,7 @@ CPPFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.cpp)))
 SFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.s)))
 BINFILES	:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.*)))
 
-export ITFILES	:=	$(foreach dir,$(notdir $(wildcard $(MUSIC)/*.it)),$(CURDIR)/$(MUSIC)/$(dir))
+export ITFILES	:=	$(foreach dir,$(notdir $(wildcard $(MUSIC)/*.it $(MUSIC)/*.s3m)),$(CURDIR)/$(MUSIC)/$(dir))
 export WAVFILES	:=	$(foreach dir,$(notdir $(wildcard $(MUSIC)/*.wav)),$(CURDIR)/$(MUSIC)/$(dir))
 
 ifneq ($(strip $(MUSIC)),)
