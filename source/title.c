@@ -56,6 +56,7 @@ void logo_anim()
 {
 	title_video_init();
 	mmEffect(SFX_STATION02);
+	REG_BLDCNT = BLD_TOP(BLD_ALL | BLD_BACKDROP) | BLD_WHITE;
 	
 	load_palette(btl_skypal_bin, NULL);
 	//fast_copy((volatile uint16_t *)MEM_PAL_BG, btl_skypal_bin + (COLSPACE << 9), 512);
