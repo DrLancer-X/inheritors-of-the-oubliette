@@ -138,7 +138,10 @@ void initPdata()
     gs.pl[i].hp = gs.pl[i].maxhp;
     gs.pl[i].mp = gs.pl[i].maxmp;
   }
-  
+  for (int i = 0; i < INV_MAX; i++) {
+    gs.equip_qty[i] = 0;
+    gs.gem_qty[i] = 0;
+  }
   for (int i = 0; i < PLOT_MAX; i++) {
     gs.plot[i] = 0;
   }
