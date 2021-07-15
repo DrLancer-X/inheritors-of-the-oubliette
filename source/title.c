@@ -30,7 +30,10 @@
 #include "btl_imsoftpal_bin.h"
 #include "btl_skygfx_bin.h"
 #include "btl_skypal_bin.h"
-
+#include "btl_starsgfx_bin.h"
+#include "btl_starspal_bin.h"
+#include "btl_fingfx_bin.h"
+#include "btl_finpal_bin.h"
 #include "btl_titlegfx_bin.h"
 #include "btl_titlepal_bin.h"
 #include "btl_titleobjgfx_bin.h"
@@ -56,7 +59,7 @@ void logo_anim()
 	
 	load_palette(btl_skypal_bin, NULL);
 	//fast_copy((volatile uint16_t *)MEM_PAL_BG, btl_skypal_bin + (COLSPACE << 9), 512);
-	fast_copy(OBJ_PAL(15), btl_imsoftpal_bin + (COLSPACE << 5), 32);
+	fast_copy(OBJ_PAL(0), btl_imsoftpal_bin + (COLSPACE << 5), 512);
 	fast_copy(OBJ_CHR(0, 0), btl_imsoftgfx_bin, btl_imsoftgfx_bin_size);
 	uint8_t sp;
 	
@@ -86,7 +89,7 @@ void logo_anim()
 					uint32_t i = x + y;
 					int v = i * 12 + 128 - fr;
 					if (v < 64) {
-						OBJSET(sp, sp * 4, 0, x * 16 + 56, y * 16 + 8, 15, ATTR0_SQUARE | ATTR0_AFF, ATTR1_SIZE_16x16 | ATTR1_AFF_ID(x + y), 0);
+						OBJSET(sp, sp * 4, 0, x * 16 + 56, y * 16 + 8, 15 - (max(v + 16, 0) / 5), ATTR0_SQUARE | ATTR0_AFF, ATTR1_SIZE_16x16 | ATTR1_AFF_ID(x + y), 0);
 					}
 					sp++;
 				}
@@ -372,4 +375,103 @@ void title_screen()
 	oam_init(&obj_mem[116], 16);
 	
 	VBlankIntrWait();
+}
+
+static uint32_t starscroll = 0;
+static void draw_stars()
+{
+  fast_copy(VIDEO_BUFFER, &btl_starsgfx_bin[starscroll], 38400);
+  starscroll = (starscroll + 240) % 230400;
+}
+
+void ending_credits()
+{
+  CURRENT_MOD = MOD_MAHOPE;
+  oam_init(obj_mem, 128);
+  REG_BLDCNT = BLD_TOP(BLD_ALL | BLD_BACKDROP) | BLD_BLACK;
+  REG_BLDY = 16;
+  load_palette(btl_starspal_bin, NULL);
+  fast_copy(OBJ_CHR(0, 0), btl_uimap_bin + (7 << 13), 8192);
+  fast_copy(OBJ_CHR(0, 8), btl_uimap_bin + (7 << 13), 8192);
+
+  VBlankIntrWait();
+  for (int i = 0; i < 16; i++) {
+    REG_BLDY = 15 - i;
+    for (int j = 0; j < 8; j++) {
+      draw_stars();
+      VBlankIntrWait();
+      flip_buffer();
+    }
+  }
+  REG_BLDCNT = BLD_BOT(BLD_BG2 | BLD_BACKDROP) | BLD_STD;
+  int y = 0;
+  int line = 0;
+  while (line < CREDITS_NUM + 10) {
+    int trrow;
+    int v;
+    if ((y % 30) < 15) {
+      trrow = 9;
+      v = (15 - y % 15);
+    } else {
+      trrow = 0;
+      v = (y % 15);
+    }
+    REG_BLDALPHA = BLDA_BUILD(16 - v, v);
+    for (int i = 0; i < 10; i++) {
+      uint16_t attr0 = (i == trrow) ? (ATTR0_WIDE | ATTR0_BLEND) : ATTR0_WIDE;
+      for (int j = 0; j < 7; j++) {
+        OBJSET(i * 8 + j, j * 4, (i + line) % 10, j * 32 + 8, ((i * 30) + 29 - (y % 30)) / 2, 1, attr0, ATTR1_SIZE_32x8, 0);
+      }
+    }
+    draw_stars();
+    y++;
+    if (y % 30 == 0) {
+      fast_copy(OBJ_CHR(0, (line % 10)), btl_uimap_bin + (7 << 13), 1024);
+      if (line < CREDITS_NUM) {
+        int x = (224 - text_width(CREDITS[line])) / 2;
+        draw_text(x, (line % 10) * 8, CREDITS[line]);
+      }
+      line++;
+    }
+    VBlankIntrWait();
+    flip_buffer();
+  }
+  
+  REG_BLDCNT = BLD_TOP(BLD_ALL | BLD_BACKDROP) | BLD_BLACK;
+  REG_BLDY = 16;
+  for (int i = 0; i <= 16; i++) {
+    REG_BLDY = i;
+    for (int j = 0; j < 16; j++) {
+      mmSetModuleVolume(max(256 - ((i * 16 + j)), 0));
+      draw_stars();
+      VBlankIntrWait();
+      flip_buffer();
+    }
+  }
+  CURRENT_MOD = MOD_PIANO1;
+  load_palette(btl_finpal_bin, NULL);
+  fast_copy(VIDEO_BUFFER, &btl_fingfx_bin[0], 38400);
+  VBlankIntrWait();
+  flip_buffer();
+  for (int i = 0; i <= 16; i++) {
+    REG_BLDY = 16 - i;
+    for (int j = 0; j < 8; j++) {
+      mmSetModuleVolume(min(((i * 8 + j)*2), 256));
+      VBlankIntrWait();
+    }
+  }
+  for (;;) {
+    if (INKEY_PRESSED & KEY_ANY) break;
+    VBlankIntrWait();
+  }
+  for (int i = 0; i <= 16; i++) {
+    REG_BLDY = i;
+    for (int j = 0; j < 8; j++) {
+      mmSetModuleVolume(max(256 - ((i * 8 + j)*2), 0));
+      VBlankIntrWait();
+    }
+  }
+  CURRENT_MOD = -1;
+  mmSetModuleVolume(256);
+  oam_init(obj_mem, 128);
 }

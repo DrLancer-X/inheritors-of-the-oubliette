@@ -50,6 +50,46 @@ static void hide_sp()
 	obj_hide(&oam_mem[127]);
 	fast_copy(OBJ_CHR(0, 0), btl_objmap_bin, 8192);
 }
+static void dissolve_sp(int fboss)
+{
+	REG_BLDCNT = BLD_BOT(BLD_BG2 | BLD_BACKDROP) | BLD_STD;
+	REG_BLDALPHA = BLDA_BUILD(16, 0);
+	OBJSET(127, 24, 0, 88, 80, 15, ATTR0_SQUARE | ATTR0_BLEND, ATTR1_SIZE_64x64, 0);
+	
+	for (int i = 0; i < 19; i++) {
+		int v = i;
+		if (i >= 12) OBJSET(127, 24, 0, 87 - (i-12)/4, 80, 15, ATTR0_SQUARE | ATTR0_BLEND, ATTR1_SIZE_64x64, 0);
+		REG_BLDALPHA = BLDA_BUILD(min(20 - v, 16), min(v, 16));
+		VBlankIntrWait();
+		
+		if (fboss) {
+			OBJSET(127, 24, 0, 88, 80, 15, ATTR0_SQUARE | ATTR0_BLEND, ATTR1_SIZE_64x64, 0);
+			v++;
+			REG_BLDALPHA = BLDA_BUILD(min(20 - v, 16), min(v + 1, 16));
+			VBlankIntrWait();
+		}
+		
+		v++;
+		REG_BLDALPHA = BLDA_BUILD(min(20 - v, 16), v);
+		VBlankIntrWait();
+		if (i >= 12) OBJSET(127, 24, 0, 89 + (i-12)/4, 80, 15, ATTR0_SQUARE | ATTR0_BLEND, ATTR1_SIZE_64x64, 0);
+		v--;
+		REG_BLDALPHA = BLDA_BUILD(min(20 - v, 16), min(v, 16));
+		VBlankIntrWait();
+		
+		if (fboss) {
+			OBJSET(127, 24, 0, 88, 80, 15, ATTR0_SQUARE | ATTR0_BLEND, ATTR1_SIZE_64x64, 0);
+			v--;
+			REG_BLDALPHA = BLDA_BUILD(min(20 - v, 16), min(v + 1, 16));
+			VBlankIntrWait();
+		}
+		
+		v++;
+		REG_BLDALPHA = BLDA_BUILD(min(20 - v, 16), min(v, 16));
+		VBlankIntrWait();
+	}
+	hide_sp();
+}
 
 static void wait()
 {
@@ -69,6 +109,7 @@ void plot1() {
 }
 
 void plot2() {
+	CURRENT_MOD = MOD_TEMP32;
 	force_camera_facing();
 	draw_sp(1);
 	wait();
@@ -81,14 +122,16 @@ void plot2() {
 	force_fixed_encounter(21);
 	draw_sp(1);
 	if (after_boss()) return;
+	CURRENT_MOD = MOD_TEMP32;
 	wait();
 	show_message(D_THUNDER, "\"They are too powerful. I can't go on. Forgive me, Patriarch.\"");
 	show_message(Q_HAWK, "\"I told you not to mess with us.\"");
 	wait();
-	hide_sp();
+	dissolve_sp(0);
 	gs.plot[PLOT_ELVL] = 8;
 }
 void plot3() {
+	CURRENT_MOD = MOD_TEMP32;
 	force_camera_facing();
 	draw_sp(2);
 	wait();
@@ -101,15 +144,17 @@ void plot3() {
 	force_fixed_encounter(22);
 	draw_sp(2);
 	if (after_boss()) return;
+	CURRENT_MOD = MOD_TEMP32;
 	wait();
 	show_message(D_SKY, "\"How is this possible?\"");
 	show_message(Q_HAWK, "\"All we wanted you to do was leave us alone... what was your name again?\"");
 	show_message(D_SKY, "\"You... you... augh!\"");
 	wait();
-	hide_sp();
+	dissolve_sp(0);
 	gs.plot[PLOT_ELVL] = 12;
 }
 void plot4() {
+	CURRENT_MOD = MOD_TEMP32;
 	force_camera_facing();
 	draw_sp(3);
 	wait();
@@ -121,13 +166,15 @@ void plot4() {
 	force_fixed_encounter(23);
 	draw_sp(3);
 	if (after_boss()) return;
+	CURRENT_MOD = MOD_TEMP32;
 	wait();
 	show_message(D_PATRIARCH, "\"It's not over. You will not get away with this.\"");
 	wait();
-	hide_sp();
+	dissolve_sp(0);
 	gs.plot[PLOT_ELVL] = 16;
 }
 void plot5() {
+	CURRENT_MOD = MOD_TEMP32;
 	force_camera_facing();
 	draw_sp(4);
 	wait();
@@ -139,13 +186,15 @@ void plot5() {
 	force_fixed_encounter(24);
 	draw_sp(4);
 	if (after_boss()) return;
+	CURRENT_MOD = MOD_TEMP32;
 	wait();
 	show_message(D_RAVEN, "\"Thunder... Sky... I'm sorry...\"");
 	wait();
-	hide_sp();
+	dissolve_sp(0);
 	gs.plot[PLOT_ELVL] = 20;
 }
 void plot6() {
+	CURRENT_MOD = MOD_TEMP32;
 	force_camera_facing();
 	draw_sp(5);
 	wait();
@@ -157,14 +206,17 @@ void plot6() {
 	force_fixed_encounter(25);
 	draw_sp(5);
 	if (after_boss()) return;
+	CURRENT_MOD = MOD_TEMP32;
 	wait();
 	show_message(R_EMPEROR, "\"What... how?\"");
 	show_message(Q_HAWK, "\"We learned how to fight here. Our ancestors stretching back to time memorial trained on these grounds.\"");
 	show_message(Q_STAR, "\"As far as we are concerned, this place is ours. Who are you, and why did you come here?\"");
 	show_message(R_EMPEROR, "\"Ugh...\"");
 	wait();
-	hide_sp();
+	dissolve_sp(1);
 	wait();
+	MESSAGE_OFFSET = 0;
+	CURRENT_MOD = MOD_MAHOPE;
 	show_message(Q_HAWK, "\"He's dead.\"");
 	show_message(Q_STAR, "\"I'm glad that's over. Clan brother Hawk, grab everything that you can and let's go.\"");
 	show_message(Q_HAWK, "\"The Qilin will never be vanquished.\"");
@@ -175,16 +227,17 @@ int plot_handle()
 {
 	BATTLE_CANNOT_RUN = 1;
 	PLOT_HANDLE(0,   8, 9, 1, plot1);   //  2/280
-	PLOT_HANDLE(1,   7, 12, 3, plot2);  // 20/280
-	PLOT_HANDLE(2,   2, 9, 6, plot3);   // 73/280
-	PLOT_HANDLE(3,   5, 8, 15, plot4);  // 154/280
-	PLOT_HANDLE(4,   14, 3, 12, plot5); // 219/280
-	PLOT_HANDLE(5,   12, 2, 0, plot6);  // 
-	PLOT_HANDLE(5,   12, 3, 0, plot6);  //
+	PLOT_HANDLE(5,   7, 12, 3, plot2);  // 20/280
+	PLOT_HANDLE(8,   2, 9, 6, plot3);   // 73/280
+	PLOT_HANDLE(9,   5, 8, 15, plot4);  // 154/280
+	PLOT_HANDLE(10,   14, 3, 12, plot5); // 219/280
+	PLOT_HANDLE(11,   12, 2, 0, plot6);  // 
+	PLOT_HANDLE(11,   12, 3, 0, plot6);  //
 	BATTLE_CANNOT_RUN = 0;
 	if (BATTLE_OUTCOME == -1) return 1;
-	if (gs.plot[PLOT_BASE] == 6) {
+	if (gs.plot[PLOT_BASE] == 12) {
 		REG_BLDCNT = BLD_TOP(BLD_ALL | BLD_BACKDROP) | BLD_BLACK;
+		WON_GAME = 1;
 		for (int i = 0; i <= 16; i++) {
 			REG_BLDY = i;
 			VBlankIntrWait();
@@ -192,7 +245,6 @@ int plot_handle()
 			VBlankIntrWait();
 			VBlankIntrWait();
 		}
-		CURRENT_MOD = -1;
 		return 1;
 	}
 	return 0;

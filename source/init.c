@@ -28,6 +28,8 @@ int16_t curr_playing_mod = -1;
 uint8_t RELOAD_PALETTE = 0;
 uint32_t TICKER = 0;
 uint16_t INKEY = 0, INKEY_PRESSED = 0;
+uint8_t WON_GAME = 0;
+uint8_t NEW_GAME;
 
 uint8_t CMEM_ON = 1;
 uint16_t KB_TURNLEFT = KEY_LEFT;
@@ -176,15 +178,25 @@ int main()
   initIrq();
   initMaxmod();
   load_config();
-  if (!skip_titlescreen) logo_screen();
-
   for (;;) {
-    first_buffer();
-    initPdata();
-    initVmem();
-    if (!skip_titlescreen) title_screen();
-    initVmem();
-    loadMap();
-    gameplay();
+    if (!skip_titlescreen) logo_screen();
+
+    for (;;) {
+      oam_init(obj_mem, 128);
+      TICKER = 0;
+      first_buffer();
+      initPdata();
+      initVmem();
+      NEW_GAME = 1;
+      if (!skip_titlescreen) title_screen();
+      initVmem();
+      loadMap();
+      gameplay();
+      if (WON_GAME) {
+        WON_GAME = 0;
+        ending_credits();
+        break;
+      }
+    }
   }
 }

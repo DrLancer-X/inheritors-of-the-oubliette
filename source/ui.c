@@ -1120,6 +1120,7 @@ int status_load()
 					mmEffect(SFX_DECIDE);
 					free(saves);
 					load_save(cur);
+					NEW_GAME = 0;
 					return 1;
 				} else {
 					mmEffect(SFX_NOPE);

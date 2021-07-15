@@ -92,8 +92,18 @@ struct pd_gamestate {
 };
 
 #define PLOT_BASE 0 // basic progression
+#define PLOT_TUT 5 // tutorial bits
 #define PLOT_ELVL 6 // max encountered enemy
 #define PLOT_ENC 7 // random encounters
+
+#define TUTORIAL_FIRSTEQUIP 1 // first equipment
+#define TUTORIAL_FIRSTGEM 2 // first spirit crystal
+#define TUTORIAL_RESERVED3 4 // 
+#define TUTORIAL_RESERVED4 8 // 
+#define TUTORIAL_RESERVED5 16 // 
+#define TUTORIAL_RESERVED6 32 // 
+#define TUTORIAL_RESERVED7 64 // 
+#define TUTORIAL_RESERVED8 128 // 
 
 extern uint8_t CMEM_ON;
 #define CMEM gs.cmem
@@ -106,3 +116,5 @@ extern uint32_t TICKER;
 extern uint16_t INKEY, INKEY_PRESSED;
 extern uint16_t KB_TURNLEFT, KB_TURNRIGHT, KB_STRAFELEFT, KB_STRAFERIGHT;
 extern uint8_t RELOAD_PALETTE;
+extern uint8_t WON_GAME;
+extern uint8_t NEW_GAME;

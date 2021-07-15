@@ -16,6 +16,7 @@
 #include <tonc_bios.h>
 #include <tonc_oam.h>
 #include <tonc_memdef.h>
+#include <tonc_irq.h>
 #include <tonc_memmap.h>
 
 #define MOVE_WAIT 6
@@ -134,6 +135,32 @@ int isPlaque(uint8_t tex) {
   return 0;
 }
 uint8_t toggleSwitch(uint8_t tex) {
+  int switch_base;
+  if (tex == 5 || tex == 6) switch_base = 5;
+  if (tex == 8 || tex == 9) switch_base = 8;
+  if (tex == 11 || tex == 12) switch_base = 11;
+  
+  int swplot = -1;
+  
+  if (gs.plot[PLOT_BASE] >= 1 && gs.plot[PLOT_BASE] <= 3 && gs.x == 6 && gs.y == 13 && gs.z == 0) swplot = 1;
+  if (gs.plot[PLOT_BASE] >= 3 && gs.plot[PLOT_BASE] <= 5 && gs.x == 6 && gs.y == 7 && gs.z == 3) swplot = 3;
+  if (gs.plot[PLOT_BASE] >= 6 && gs.plot[PLOT_BASE] <= 8 && gs.x == 9 && gs.y == 6 && gs.z == 3) swplot = 6;
+  
+  int offset = tex - switch_base;
+  
+  if (swplot != -1) {
+    if (offset == 1) {
+      // Enable switch
+      gs.plot[PLOT_BASE] = swplot + 2;
+    } else {
+      // Disable switch
+      gs.plot[PLOT_BASE] = swplot + 1;
+    }
+  }
+  
+  return switch_base + (offset ^ 1);
+  
+  
   switch (tex) {
     case 5: return 6;
     case 6: return 5;
@@ -305,16 +332,37 @@ void victory()
   }
   
   show_message(-1, msg);
-  
+  int got_eq = 0;
+  int got_gem = 0;
   for (int i = 0; i < 6; i++) {
     uint8_t ico = BATTLE_SPOILS[i];
-    
-    if (ico >= 80) { // equipment
-      gs.equip_qty[ico - 80]++;
-    } else if (ico >= 40) { // soulstone
-      gs.gem_qty[ico - 40]++;
+    if (ico != 0xFF) {
+      if (ico >= 80) { // equipment
+        gs.equip_qty[ico - 80]++;
+        got_eq = 1;
+      } else if (ico >= 40) { // soulstone
+        gs.gem_qty[ico - 40]++;
+        got_gem = 1;
+      }
     }
     BATTLE_SPOILS[i] = 0xFF;
+  }
+  
+  if (got_gem && !(gs.plot[PLOT_TUT] & TUTORIAL_FIRSTGEM)) {
+    gs.plot[PLOT_TUT] |= TUTORIAL_FIRSTGEM;
+    
+    show_message(1, "Is this...?");
+    show_message(0, "Correct, this is what we came here for. The inert form of these spirit creatures; spirit crystals.");
+    show_message(1, "Fantastic; we can use these to gain some of the powers of these spirit creatures. They will also be invaluable treasures to bring back to the clan.");
+    show_message(-1, "(Press START to open up the menu and select the second option to equip your party with spirit crystals. Spirit crystals improve your stats and give you access to more techniques.)");
+  }
+  if (got_eq && !(gs.plot[PLOT_TUT] & TUTORIAL_FIRSTEQUIP)) {
+    
+    gs.plot[PLOT_TUT] |= TUTORIAL_FIRSTEQUIP;
+    show_message(1, "That creature seems to have dropped something...");
+    show_message(0, "Yes, this is a fantastic find. The latent Qi in this place has coalesced into godrelics. Powerful equipment that will help us survive in here.");
+    show_message(1, "Indeed, this is a fortunate discovery. We should equip it at once.");
+    show_message(-1, "(Press START to open up the menu and select the first option to equip your party with godrelics. Godrelics can improve your combat potential, reduce the damage you take and more.)");
   }
   
   mmEffectCancelAll();
@@ -322,6 +370,41 @@ void victory()
 
 int openDoor(uint8_t dir)
 {
+  // Is this door locked?
+  int plotdoor = -1;
+  if ((gs.x == 6) && (gs.y == 10) && (gs.z == 2)) plotdoor = 1;
+  if ((gs.x == 5) && (gs.y == 11) && (gs.z == 3)) plotdoor = 3;
+  if ((gs.x == 8) && (gs.y == 8) && (gs.z == 5)) plotdoor = 6;
+  if (gs.plot[PLOT_BASE] == plotdoor || gs.plot[PLOT_BASE] == plotdoor + 1) {
+    mmEffect(SFX_LOCKED);
+    if (gs.plot[PLOT_BASE] == 1 || gs.plot[PLOT_BASE] == 3 || gs.plot[PLOT_BASE] == 6) {
+      for (int i = 0; i < 16; i++) {
+        VBlankIntrWait();
+      }
+    }
+    switch (gs.plot[PLOT_BASE]) {
+      case 1:
+        show_message(0, "A locked door...");
+        show_message(1, "We should look around and see if there is something that unlocks this. The antecedents were very fond of their elaborate mechanical contraptions and devices.");
+        gs.plot[PLOT_BASE]++;
+      break;
+      case 3:
+        show_message(0, "Looks like another locked door. We should search for another switch or button, see if something opens this.");
+        gs.plot[PLOT_BASE]++;
+      break;
+      case 6:
+        show_message(1, "Locked again...");
+        show_message(0, "This is starting to get old. Did you see anything on the wall that we might have missed on the way here?");
+        show_message(1, "I don't think so, but we should certainly look around.");
+        gs.plot[PLOT_BASE]++;
+      break;
+      default:
+        break;
+    }
+    
+    return 0;
+  }
+  
   mmEffect(SFX_DOOR);
   int x = gs.x;
   int y = gs.y;
@@ -400,15 +483,42 @@ int after_boss()
   return 0;
 }
 
+static int fuzz = 0;
+__attribute__((section(".iwram"), long_call, target("arm")))
+void hblank()
+{
+  REG_BLDY = max((fuzz - ((REG_VCOUNT - fuzz) & 0x1F)) >> 3, 0);
+  REG_BG2X = ((((((REG_VCOUNT + fuzz) & 0xF) - 8)) << 4)) * fuzz;
+}
+
 void gameplay() {
+  mmSetModuleVolume(0);
   GAMEPLAY_MUS = MOD_TEMP31;
   BATTLE_OUTCOME = 0;
-  CURRENT_MOD = GAMEPLAY_MUS;
+  CURRENT_MOD = -1;
   
   drawInstant(PERSP_FWD);
-  for (int i = 0; i <= 16; i++) {
-    REG_BLDY = 16 - i;
-    VBlankIntrWait();
+  if (NEW_GAME) {
+    mmEffect(SFX_WARP);
+    irq_add(II_HBLANK, hblank);
+    irq_enable(II_HBLANK);
+    for (int i = 0; i <= 128; i++) {
+      
+      fuzz = 128 - i;
+      REG_BLDY = (128 - i) / 8;
+      if (i == 112) CURRENT_MOD = GAMEPLAY_MUS;
+      mmSetModuleVolume(max(i * 16 - 1792, 0));
+      VBlankIntrWait();
+    }
+    REG_BG2PA = 256;
+    irq_disable(II_HBLANK);
+  } else {
+    CURRENT_MOD = GAMEPLAY_MUS;
+    for (int i = 0; i <= 16; i++) {
+      REG_BLDY = (16 - i);
+      mmSetModuleVolume(i * 16);
+      VBlankIntrWait();
+    }
   }
   for (;;) { // Main loop
     if (show_loc) {
