@@ -40,6 +40,7 @@
 static int SPR_YOFFSET = 0;
 //int BATTLE_MOD = MOD_PIP_HITHERE;
 int BATTLE_MOD = MOD_MOD3;
+static int BOSS_MOD = MOD_MOD4;
 int BATTLE_CANNOT_RUN = 0;
 
 int BATTLE_OUTCOME; // 1 - victory. 0 - flee. -1 - game over
@@ -1369,7 +1370,7 @@ static void change_face_dir(int dir)
 
 void random_encounter_dir(uint8_t *elist, int dir)
 {
-  CURRENT_MOD = BATTLE_MOD;
+  CURRENT_MOD = BATTLE_CANNOT_RUN ? BOSS_MOD : BATTLE_MOD;
   
   change_face_dir(dir);
   

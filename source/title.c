@@ -449,7 +449,7 @@ void ending_credits()
       flip_buffer();
     }
   }
-  CURRENT_MOD = MOD_PIANO1;
+  CURRENT_MOD = MOD_PIANO1A;
   load_palette(btl_finpal_bin, NULL);
   fast_copy(VIDEO_BUFFER, &btl_fingfx_bin[0], 38400);
   VBlankIntrWait();
