@@ -60,7 +60,7 @@ void logo_anim()
 	
 	load_palette(btl_skypal_bin, NULL);
 	//fast_copy((volatile uint16_t *)MEM_PAL_BG, btl_skypal_bin + (COLSPACE << 9), 512);
-	fast_copy(OBJ_PAL(0), btl_imsoftpal_bin + (COLSPACE << 5), 512);
+	fast_copy(OBJ_PAL(0), btl_imsoftpal_bin + (COLSPACE << 9), 512);
 	fast_copy(OBJ_CHR(0, 0), btl_imsoftgfx_bin, btl_imsoftgfx_bin_size);
 	uint8_t sp;
 	
